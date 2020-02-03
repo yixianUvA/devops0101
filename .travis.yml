@@ -1,25 +1,23 @@
-sudo: required 
+sudo: required
 services:
-  - docker
-# ref: https://docs.travis-ci.com/user/languages/python
+- docker
 language: python
 python:
-  - "3.7"
-
-
+- '3.7'
 before_install:
-  - docker version
-  - docker info
+- docker version
+- docker info
 install:
-    - npm install newman
-    - pip install -r requirements.txt 
-    - pip install -r test-requirements.txt
-    - pip install nose
-    - pip install Flask-Testing
+- npm install newman
+- pip install -r requirements.txt
+- pip install -r test-requirements.txt
+- pip install names
+- pip install nose
+- pip install Flask-Testing
 before_script:
-    - node --version
-    - npm --version
-    - node_modules/.bin/newman --version  
+- node --version
+- npm --version
+- node_modules/.bin/newman --version 
     
 script:
 - python -m unittest discover
