@@ -1,4 +1,4 @@
-sudo: required 
+ sudo: required 
 services:
   - docker
 # ref: https://docs.travis-ci.com/user/languages/python
@@ -33,6 +33,6 @@ script:
 
 after_success:
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
-  - docker tag my_docker_reposetory/swagger_server my_docker_reposetory/swagger_server
-  - docker push my_docker_reposetory/swagger_server
+  - docker tag yixian7777777/swagger_server yixian7777777/swagger_server
+  - docker push yixian7777777/swagger_server
 © 2020 GitHub, Inc.
