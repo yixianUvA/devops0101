@@ -1,5 +1,37 @@
-sudo: required
-env:
-  global:
-  - secure: J3Ee36pQko5twL0wizryDWtubvQvxUAAMcZiW614CYOIfssgvlHdIKRqfLV7qQ3hBYuAwq1jLZyWFGtNiajZ6QNCAWUkCoMLmrCvo64qGGj8wedzwt5M4GOkJ7jHbkHdnWUBoxRjdWO+EQhQDYQyz4en+GCZ8sb78QNOdG8BhxvHo5H7eKGiWgrq2jMn2dqS9Ge9ioEZ2aBr1wwHM0qe5+So9Xf1p8j+uSo1soFU38PI10lNX3wTD07o+sVf0CoOHdWClviEW8D4v93+8F3oUq9qHlW32UzqgBmnGSE+AQEUDvYH9yFmIJKS3BOnOab+wOo7ksm0Kf0LGRWDjEgNQuYaMqz7JqzAdhGo3Q6m023YOx59R+o06hzQss5JjOK33WQm1XeQ7hA46KFhuOMAWYW5xGJ9lChKwd4m5YKRnmMV8SgjTAqpLoar+hGTPoChq6vIMiiZJEwSV0Hxo0gBLqrRWQJbW2iRoPPlCppvK1g24kDKSB/skvq202vzGFMvo1UWHHsLcT7eYT8uCM9PCpyCANLcUpTfQu7xlfY7zx40/5lxYS/d1uTzczcN/aGAT0rU2lgMKqZJ0hae95CpAbZ3pN6ej/iibxvPTTcQpJbIKs11ZF5j6Ydn2lwCNlX0WjAnKcemIrhLRcU5bT27eQ8SIBU4tEpeDoqq+jR99w0=
-  - secure: xgGJRl1D7dnM4Yrg8kRgLJEMS0lv8/9U0kFJ8QzBljUkBnULZO0FDckL+fXTLS8rmqbMr8UBOOKG5/z9D+OCT+bUvW/nPyO8WAQoxd/bTXsf3JLaR+oW0OmGllEFkuGJSGnpE3JGrl3Vgh/g3PENBjcix9DInqIM6eu0+TnqV01AuDOunXFBdtZwQ9tG7YVHFpHq6DcJwRNhVcX3+JxGF+6Pu6+BZYSX3flHLapoSGfjUxHd8+pgpbvpn7v5kUJssiF+3Q+8kvPdGvi/3JEAhGJ6f0BPuAoR00fLgf73zU7bUPa+u9FAxLhf6E+fHBa7GXHKv4V5NxVM1SaYMt2bNFbVR3koQSRK+l3Mheyo9Opcgve6BkE3CQhc31+U58k78PpISVHO06Gga8CrnowEYMlq15C2EmSNlbMQbyEqdHHBVUTeL8fY06+eqbhWzDwdpZ9YnPg5Ogro+9eY7FhnOSLzjIUR039pJL6nCaP4K7ZWgDbuG8WzACv07t3MYvIxZhwYMmilK9VhcyOBbjPcdNUVWRb6PPLuddIUVHD/ljl3aOVUbvHLFW8Qs27evj15/yBMZlczIRtdI0HRXNA/7RY5tNdT0uauL6/rIl9bb7UVjptXLW+vtX2YvDfvdJIIEVnp+f7BEezzQROlYQnCEY/Vx79gulwIHXl/2AN89iw=
+sudo: required 
+services:
+  - docker
+# ref: https://docs.travis-ci.com/user/languages/python
+language: python
+python:
+  - "3.7"
+
+
+before_install:
+  - docker version
+  - docker info
+install:
+    - npm install newman
+    - pip install -r requirements.txt 
+    - pip install -r test-requirements.txt
+    - pip install nose
+    - pip install Flask-Testing
+before_script:
+    - node --version
+    - npm --version
+    - node_modules/.bin/newman --version  
+    
+script:
+- python -m unittest discover
+- docker run --name example_api -d -t -p 127.0.0.1:8080:8080 my_docker_repo/swagger-spring-example:1.0.0
+- docker ps
+- count=0 && until $(curl --output /dev/null --silent --head --fail http://localhost:8080);
+  do printf '.' && sleep 3 && count=$((count+1)) && if [ $count -gt 5 ]; then break;
+  fi; done
+- docker logs example_api
+- node_modules/.bin/newman run tests/postman_collection.json -e tests/postman_environment.json
+
+after_success:
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+  - docker tag yixian7777777/swagger_server yixian7777777/swagger_server
+  - docker push yixian7777777/swagger_server
