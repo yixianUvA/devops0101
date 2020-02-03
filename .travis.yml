@@ -17,8 +17,7 @@ install:
 before_script:
 - node --version
 - npm --version
-- node_modules/.bin/newman --version 
-    
+- node_modules/.bin/newman --version
 script:
 - python -m unittest discover
 - docker build -t swagger-spring-example:1.0.0 .
@@ -29,8 +28,11 @@ script:
   fi; done
 - docker logs example_api
 - node_modules/.bin/newman run tests/postman_collection.json -e tests/postman_environment.json
-
 after_success:
-  - docker login -u $DOCKER_USER -p $DOCKER_PASS
-  - docker tag my_docker_reposetory/swagger_server yixian7777777/swagger_server
-  - docker push yixian7777777/swagger_server
+- docker login -u $DOCKER_USER -p $DOCKER_PASS
+- docker tag my_docker_reposetory/swagger_server yixian7777777/swagger_server
+- docker push yixian7777777/swagger_server
+env:
+  global:
+  - secure: R7ESV9GmHFnACIeAtUto0xyyyh2n0LCn6+OAh9MrWLL6iCXpzhhX3zEhZCPZEBzmX9H0MjEcqJpmhcw1dxy3/K7OtBXZLRccfXNRPTAZZuDsDi+MAGJq/0rjVQ149AQ29SmMlRxu/fLjeE835qgpMzlrIBlIjQ0Ewt1Jjee+KW0I1t0DfHoKusSmbXkNpx8rTOMpKt/DOmdwexMD8EeN7qsD8lEyLcKNbRR1uLcKDntgJnLWuV0dWQqLnV4vx70HMJeGkR+Wzw3MvY2IkplvaN7HYamPoqSnhPwSOsBQi+x4lCSKQ1bE0bIUh2Xg7dngi0exD86uFRxFMEVPgotKzcjVSUqiNIWx9B9F90AcyEp+JrovKssNk2GAiwK6PXHBq7vxmrdSZ69KSSFLjxR5KW0D2cWIBZosxIFM/s6Lyr+TYUO1JnCfEBisabAkUrfnxjUDogk7bkpGc4WOzFI07FFZNMZ44MQDX6BzwYP5AiJ+uF+S8p8asZCTyW0LlkF9Q5l5kOmr4bmrhRCRlEPfXE2ieqzSxE2Nl6HJwCayBW3yoqclOqCPT6VepuDn5cuyY2tWJ8GR/aNYPleXtSx2vLrjZyTzoWrj0IZJQe1Xwwsvp6bT3ttDsfnFsZE3i/LBXzwTF/6bceO83vbI6wkg146xCVF+3tQ3L9avCM/8c3s=
+  - secure: jZd6zXf0N/hnHgCzxoH2pDUgweMrcbTAmJqi5pc7R1khpIeJVRO9z/FwDksCH17yRvzxXI4hD88u2x0N9yAYGFEdr80Mv/8W+CedheEn9USW+x4dITAtoj+473pmFjVZ9HOTx4dJOZW/t1FpX587NxJM1wDCDtZfz5R/XFr1PjrTN4JhNSR2mTypojYJHuYg0ncSeV55ghoUXb+Y0fdodvb4AiY/g9dqYShelfB9sE/laTAikw2Xe3Y1aNjn5Sg95NWTFUtT2ADFRO5MMLuugW1efuHDUeP8Me2cXonQC/aFUrSSkxy2vV4blWREdXYUuXjdCC0oaLX1cKl3JFz9DDLKi2JIUM5PSJox9aAfkTiholFCpypC/p9MKevF4y5q65WUREZYqZkZry7a5Y3WoIiosfa1FOEbC3l3fYT9/ssjpOShfcjZRr/ngxGX7qN9bLJqDkbJVBWcR5oy2D3g0S+lCwtF66eZ3/p3NeKz9iYWpHS2qV8+EitiNrVR10jF11PhhQinoGc6ov/ieC15Jfcr0bbMu/VD3glG5ThD7wc04GfC7+EiWjFdM9zhsKZ1bzTk4WHsp5YxqIGAtu72ndVkQs/CChzgOZWDk9GaVzMjL3JfR0sEUkBdZrZX0CSsn21yGQSW76Oe6B0NdUmz2Zn4T3Ubcj76iv94RpODUjQ=
