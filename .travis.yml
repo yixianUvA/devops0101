@@ -22,7 +22,7 @@ before_script:
     - node_modules/.bin/newman --version  
     
 script:
-- python -m unittest discover
+- python3 -m unittest discover
 - docker build -t swagger-spring-example:1.0.0 .
 - docker run --name example_api -d -t -p 127.0.0.1:8080:8080 swagger-spring-example:1.0.0
 - docker ps
@@ -30,7 +30,7 @@ script:
   do printf '.' && sleep 3 && count=$((count+1)) && if [ $count -gt 5 ]; then break;
   fi; done
 - docker logs example_api
-- node_modules/.bin/newman run test/postman_collection.json -e test/postman_environment.json
+- node_modules/.bin/newman run tests/postman_collection.json -e tests/postman_environment.json
 
 after_success:
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
