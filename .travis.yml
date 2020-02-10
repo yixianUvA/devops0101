@@ -14,7 +14,6 @@ install:
 - pip install names
 - pip install nose
 - pip install Flask-Testing
-- pip uninstall Werkzeug
 - pip install Werkzeug
 
 before_script:
